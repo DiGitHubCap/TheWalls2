@@ -51,7 +51,7 @@ public class TheWalls2 extends JavaPlugin {
 					sender.sendMessage(ChatColor.YELLOW + "/thewalls leave" + ChatColor.WHITE + " - Leaves the game queue");
 					sender.sendMessage(ChatColor.YELLOW + "/thewalls team <1-4>" + ChatColor.WHITE + " - Joins a team");
 					sender.sendMessage(ChatColor.RED + "/thewalls start" + ChatColor.WHITE + " - Starts a game");
-					sender.sendMessage(ChatColor.RED + "/thewalls restoreworld" + ChatColor.WHITE + " - Starts a game");
+					sender.sendMessage(ChatColor.RED + "/thewalls restoreworld" + ChatColor.WHITE + " - Restores the world");
 					return true;
 				}
 				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
