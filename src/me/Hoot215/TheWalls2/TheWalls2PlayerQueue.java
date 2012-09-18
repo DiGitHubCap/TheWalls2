@@ -41,7 +41,8 @@ public class TheWalls2PlayerQueue {
 	
 	public void removePlayer(String playerName, boolean teleport) {
 		if (teleport)
-			plugin.getServer().getPlayer(playerName).teleport(getLastPlayerLocation(playerName));
+			plugin.getServer().getPlayer(playerName)
+			.teleport(getLastPlayerLocation(playerName));
 		
 		Iterator<String> iter = queue.iterator();
 		while(iter.hasNext()) {
@@ -85,7 +86,17 @@ public class TheWalls2PlayerQueue {
 		return queue;
 	}
 	
-	public void reset() {
+	public void reset(boolean teleport) {
+		if (!teleport) {
+			queue = new HashSet<String>();
+			return;
+		}
+		
+		for (String s : queue) {
+			String playerName = s.split(":")[0];
+			plugin.getServer().getPlayer(playerName)
+			.teleport(getLastPlayerLocation(playerName));
+		}
 		queue = new HashSet<String>();
 	}
 }

@@ -165,6 +165,26 @@ public class TheWalls2 extends JavaPlugin {
 					sender.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
 					return true;
 				}
+				else if (args[0].equalsIgnoreCase("stop")) {
+					if (sender.hasPermission("thewalls2.command.thewalls.start")) {
+						if (gameList == null) {
+							sender.sendMessage(ChatColor.RED + "There is no game currently in progress!");
+							return true;
+						}
+						
+						if (TheWalls2World.isRestoring) {
+							sender.sendMessage(ChatColor.RED + "The world is being restored");
+							return true;
+						}
+						
+						teams.reset();
+						queue.reset(true);
+						gameList = null;
+						restoreBackup();
+					}
+					sender.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
+					return true;
+				}
 				else if (args[0].equalsIgnoreCase("restoreworld")) {
 					if (sender.hasPermission("thewalls2.command.thewalls.restoreWorld")) {
 						sender.sendMessage(ChatColor.GREEN + "Restoring world...");
@@ -319,7 +339,7 @@ public class TheWalls2 extends JavaPlugin {
 					}
 					
 					teams.reset();
-					queue.reset();
+					queue.reset(false);
 					gameList = null;
 					restoreBackup();
 				}
@@ -353,6 +373,8 @@ public class TheWalls2 extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		System.out.println("[TheWalls2] Unloading world...");
+		getServer().unloadWorld(worldName, false);
 		System.out.println(this + " is now disabled!");
 	}
 	
@@ -364,6 +386,7 @@ public class TheWalls2 extends JavaPlugin {
 		queue = new TheWalls2PlayerQueue(this);
 		teams = new TheWalls2GameTeams(queue);
 		TheWalls2World.createBackup();
+		System.out.println("[TheWalls2] Loading world...");
 		WorldCreator wc = new WorldCreator(worldName);
 		World world = getServer().createWorld(wc);
 		locData = new TheWalls2LocationData(world);
