@@ -1,0 +1,56 @@
+# TheWalls2: The Walls 2 plugin.
+# Copyright (C) 2012  Andrew Stevanus (Hoot215) <hoot893@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#  
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 
+
+name: TheWalls2
+main: me.Hoot215.TheWalls2.TheWalls2
+version: 0.1
+author: Hoot215
+permissions:
+    thewalls2.*:
+        description: "Gives access to everything in TheWalls2"
+        default: op
+        children:
+            thewalls2.default: true
+            thewalls2.command.thewalls.start: true
+            thewalls2.command.thewalls.restoreworld: true
+    thewalls2.default:
+        description: "Gives access to defaults in TheWalls2"
+        default: true
+        children:
+            thewalls2.command.thewalls: true
+            thewalls2.command.thewalls.join: true
+            thewalls2.command.thewalls.leave: true
+            thewalls2.command.thewalls.team: true
+    thewalls2.command.thewalls:
+        description: "Gives access to the command '/thewalls'"
+    thewalls2.command.thewalls.join:
+        description: "Gives access to the command '/thewalls join'"
+    thewalls2.command.thewalls.leave:
+        description: "Gives access to the command '/thewalls leave'"
+    thewalls2.command.thewalls.team:
+        description: "Gives access to the command '/thewalls team <1-4>'"
+    thewalls2.command.thewalls.start:
+        description: "Gives access to the command '/thewalls start'"
+    thewalls2.command.thewalls.restoreworld:
+        description: "Gives access to the command '/thewalls restoreworld'"
+commands:
+    thewalls:
+        description: "Displays TheWalls2 help"
+        permission: thewalls2.command.thewalls
+        permission-message: "You don't have <permission>"
+        usage: "/thewalls [Sub-Command]"
+        aliases: [tw, twalls]
