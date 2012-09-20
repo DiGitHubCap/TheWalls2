@@ -164,6 +164,7 @@ public class TheWalls2PlayerListener implements Listener {
 				queue.removePlayer(playerName, true);
 				return;
 			}
+			return;
 		}
 		
 		if (gameList.isInGame(playerName)) {
