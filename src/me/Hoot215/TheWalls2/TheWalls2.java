@@ -84,7 +84,7 @@ public class TheWalls2 extends JavaPlugin {
 							
 							if (queue.getSize() < 12) {
 								queue.addPlayer(player.getName(), player.getLocation());
-								player.teleport(new Location(getServer().getWorld(worldName), -793.5, 97.0, -56.5));
+								player.teleport(locData.getLobby());
 								player.sendMessage(ChatColor.GREEN + "Successfully joined the game queue!");
 							}
 							else {
@@ -391,6 +391,10 @@ public class TheWalls2 extends JavaPlugin {
 		World world = getServer().createWorld(wc);
 		locData = new TheWalls2LocationData(world);
 		respawnQueue = new TheWalls2RespawnQueue(this);
+		String lobby = getConfig().getString("locations.lobby");
+		if (TheWalls2ConfigSetter.isLobbyDifferent(this, lobby)) {
+			TheWalls2ConfigSetter.updateLobbyLocation(this, lobby);
+		}
 		playerListener = new TheWalls2PlayerListener(this);
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		

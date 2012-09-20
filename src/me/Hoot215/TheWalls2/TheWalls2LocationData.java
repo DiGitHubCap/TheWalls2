@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 public class TheWalls2LocationData {
+	private Location lobby = new Location(null, -793.5, 97.0, -56.5);
 	private Set<Location> slots = new HashSet<Location>();
 	private Location team1Slot0 = new Location(null, -864.5, 71.0, -135.5);
 	private Location team1Slot1 = new Location(null, -864.5, 71.0, -132.5);
@@ -44,6 +45,7 @@ public class TheWalls2LocationData {
 			new Location(null, -671, 112, -47));
 	
 	public TheWalls2LocationData(World world) {
+		lobby.setWorld(world);
 		team1Slot0.setWorld(world);
 		team1Slot1.setWorld(world);
 		team1Slot2.setWorld(world);
@@ -68,14 +70,30 @@ public class TheWalls2LocationData {
 		slots.add(team4Slot0);
 		slots.add(team4Slot1);
 		slots.add(team4Slot2);
-		walls.add(new Cuboid(new Location(null, -864, 68, -164), new Location(null, -804, 97, -164)));
-		walls.add(new Cuboid(new Location(null, -803, 68, -103), new Location(null, -803, 97, -163)));
-		walls.add(new Cuboid(new Location(null, -785, 68, -164), new Location(null, -785, 97, -103)));
-		walls.add(new Cuboid(new Location(null, -724, 68, -164), new Location(null, -784, 97, -164)));
-		walls.add(new Cuboid(new Location(null, -724, 68, -182), new Location(null, -784, 97, -182)));
-		walls.add(new Cuboid(new Location(null, -785, 68, -243), new Location(null, -785, 97, -183)));
-		walls.add(new Cuboid(new Location(null, -803, 68, -243), new Location(null, -803, 97, -183)));
-		walls.add(new Cuboid(new Location(null, -864, 68, -182), new Location(null, -804, 97, -182)));
+		walls.add(new Cuboid(new Location(null, -864, 68, -164),
+				new Location(null, -804, 97, -164)));
+		walls.add(new Cuboid(new Location(null, -803, 68, -103),
+				new Location(null, -803, 97, -163)));
+		walls.add(new Cuboid(new Location(null, -785, 68, -164),
+				new Location(null, -785, 97, -103)));
+		walls.add(new Cuboid(new Location(null, -724, 68, -164),
+				new Location(null, -784, 97, -164)));
+		walls.add(new Cuboid(new Location(null, -724, 68, -182),
+				new Location(null, -784, 97, -182)));
+		walls.add(new Cuboid(new Location(null, -785, 68, -243),
+				new Location(null, -785, 97, -183)));
+		walls.add(new Cuboid(new Location(null, -803, 68, -243),
+				new Location(null, -803, 97, -183)));
+		walls.add(new Cuboid(new Location(null, -864, 68, -182),
+				new Location(null, -804, 97, -182)));
+	}
+	
+	public Location getLobby() {
+		return lobby;
+	}
+	
+	public void setLobby(Location loc) {
+		lobby = loc;
 	}
 	
 	public Location getSlot(int team, int slot) {

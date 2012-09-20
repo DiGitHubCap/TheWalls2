@@ -18,8 +18,14 @@
 # general:
 #   world: The Walls 2 world name
 #   prize: The prize for winning The Walls 2
-#          Format: "itemID:itemData:itemAmount"
+#          Format: 'itemID:itemData:itemAmount'
+# locations:
+#   lobby: Lobby location (empty = default)
+#          Format: x;y;z
+#          Example: 250.5;65;100.5
 
 general:
-  world: "thewalls2"
-  prize: "264:0:1"
+  world: thewalls2
+  prize: '264:0:1'
+locations:
+  lobby: ''
