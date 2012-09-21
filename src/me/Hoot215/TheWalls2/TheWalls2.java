@@ -159,7 +159,11 @@ public class TheWalls2 extends JavaPlugin {
 							return true;
 						}
 						
-						startGame(sender);
+						if (startGame()) {
+							sender.sendMessage(ChatColor.GREEN + "Game started!");
+						}
+						else
+							sender.sendMessage(ChatColor.RED + "There must be at least 2 teams!");
 						return true;
 					}
 					sender.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
@@ -273,16 +277,13 @@ public class TheWalls2 extends JavaPlugin {
 		return false;
 	}
 	
-	public void startGame(CommandSender sender) {
-		WorldCreator creator = new WorldCreator("thewalls2");
-		World world = getServer().createWorld(creator);
+	public boolean startGame() {
+		World world = getServer().getWorld(worldName);
 		
 		teams.cleanup();
 		
-		if (teams.getEmptyTeamCount() > 2) {
-			sender.sendMessage(ChatColor.RED + "There must be at least 2 teams!");
-			return;
-		}
+		if (teams.getEmptyTeamCount() > 2)
+			return false;
 		gameList = new TheWalls2GameList(queue.getList());
 		
 		for (int t = 1; t < 5; t++) {
@@ -298,6 +299,8 @@ public class TheWalls2 extends JavaPlugin {
 				loc.getBlock().setType(Material.AIR);
 			}
 		}, 20L);
+		
+		return true;
 	}
 	
 	public void teleportTeamToGame(int teamNumber, World world) {

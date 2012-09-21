@@ -23,9 +23,19 @@
 #   lobby: Lobby location (empty = default)
 #          Format: x;y;z
 #          Example: 250.5;65;100.5
+# timer:
+#   enabled: Whether or not the timer for starting games automatically is enabled
+#   initial-time: The time (in minutes) that it takes after the server is started until
+#                 a new game is started (if there are enough players)
+#   normal-time: The time (in minutes) that it takes after the last game has finished
+#                until a new game is started (if there are enough players)
 
 general:
   world: thewalls2
   prize: '264:0:1'
 locations:
   lobby: ''
+timer:
+  enabled: true
+  initial-time: 10
+  normal-time: 15
