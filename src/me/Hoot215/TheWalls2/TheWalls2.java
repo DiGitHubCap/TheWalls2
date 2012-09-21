@@ -17,7 +17,10 @@
 
 package me.Hoot215.TheWalls2;
 
+import java.io.IOException;
 import java.util.Set;
+
+import me.Hoot215.TheWalls2.metrics.Metrics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -400,6 +403,17 @@ public class TheWalls2 extends JavaPlugin {
 		}
 		playerListener = new TheWalls2PlayerListener(this);
 		getServer().getPluginManager().registerEvents(playerListener, this);
+		
+		if (getConfig().getBoolean("timer.enabled")) {
+			long initialTime = getConfig().getLong("timer.initial-time");
+			long normalTime = getConfig().getLong("timer.normal-time");
+			new Thread(new TheWalls2Timer(this, initialTime, normalTime)).start();
+		}
+		
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {}
 		
 		System.out.println(this + " is now enabled!");
 	}
