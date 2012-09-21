@@ -354,7 +354,7 @@ public class TheWalls2 extends JavaPlugin {
 	}
 	
 	public void restoreBackup() {
-		TheWalls2World.restoreBackup(this);
+		TheWalls2World.restoreBackup(this, true);
 	}
 	
 	public TheWalls2PlayerQueue getQueue() {
@@ -379,6 +379,10 @@ public class TheWalls2 extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		if (gameList != null) {
+			System.out.println("[TheWalls2] Game interrupted! Restoring world...");
+			TheWalls2World.restoreBackup(this, false);
+		}
 		System.out.println("[TheWalls2] Unloading world...");
 		getServer().unloadWorld(worldName, false);
 		System.out.println(this + " is now disabled!");

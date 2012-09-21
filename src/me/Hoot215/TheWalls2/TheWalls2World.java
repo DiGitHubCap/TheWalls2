@@ -46,7 +46,7 @@ public class TheWalls2World {
 		}
 	}
 	
-	public static void restoreBackup(TheWalls2 plugin) {
+	public static void restoreBackup(TheWalls2 plugin, boolean delay) {
 		plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
 				+ ChatColor.YELLOW + "World is being unloaded...");
 		isRestoring = true;
@@ -57,26 +57,46 @@ public class TheWalls2World {
 		}
 		plugin.getServer().unloadWorld(TheWalls2.worldName, false);
 		
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
-				new Runnable() {
-			public void run() {
-				Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
-						+ ChatColor.YELLOW + "World backup is being restored...");
-				File world = new File(TheWalls2.worldName);
-				File worldBackup = new File(TheWalls2.worldName + "_backup");
-				FileUtils.deleteFolder(world);
-				try {
-					FileUtils.copyFolder(worldBackup, world);
-				} catch (IOException e) {
-					e.printStackTrace();
+		if (delay) {
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+					new Runnable() {
+				public void run() {
+					Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
+							+ ChatColor.YELLOW + "World backup is being restored...");
+					File world = new File(TheWalls2.worldName);
+					File worldBackup = new File(TheWalls2.worldName + "_backup");
+					FileUtils.deleteFolder(world);
+					try {
+						FileUtils.copyFolder(worldBackup, world);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
+							+ ChatColor.YELLOW + "World is being loaded...");
+					WorldCreator wc = new WorldCreator(TheWalls2.worldName);
+					Bukkit.getServer().createWorld(wc);
+					isRestoring = false;
 				}
-				
-				Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
-						+ ChatColor.YELLOW + "World is being loaded...");
-				WorldCreator wc = new WorldCreator(TheWalls2.worldName);
-				Bukkit.getServer().createWorld(wc);
-				isRestoring = false;
+			}, 20L);
+		}
+		else {
+			plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
+					+ ChatColor.YELLOW + "World backup is being restored...");
+			File world = new File(TheWalls2.worldName);
+			File worldBackup = new File(TheWalls2.worldName + "_backup");
+			FileUtils.deleteFolder(world);
+			try {
+				FileUtils.copyFolder(worldBackup, world);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		}, 20L);
+			
+			plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
+					+ ChatColor.YELLOW + "World is being loaded...");
+			WorldCreator wc = new WorldCreator(TheWalls2.worldName);
+			plugin.getServer().createWorld(wc);
+			isRestoring = false;
+		}
 	}
 }
