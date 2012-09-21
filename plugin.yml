@@ -26,6 +26,7 @@ permissions:
         children:
             thewalls2.default: true
             thewalls2.command.thewalls.start: true
+            thewalls2.command.thewalls.stop: true
             thewalls2.command.thewalls.restoreworld: true
     thewalls2.default:
         description: "Gives access to defaults in TheWalls2"
