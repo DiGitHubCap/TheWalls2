@@ -30,7 +30,7 @@ public class TheWalls2Timer implements Runnable {
 	
 	public void run() {
 		try {
-			Thread.sleep(initialTime);
+			Thread.sleep(initialTime * 60000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -38,14 +38,16 @@ public class TheWalls2Timer implements Runnable {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
 				new Runnable() {
 			public void run() {
-				if (plugin.startGame())
+				TheWalls2GameList gameList = plugin.getGameList();
+				if (gameList != null && !TheWalls2World.isRestoring
+						&& plugin.startGame())
 					System.out.println("[TheWalls2] Game started automatically");
 			}
 		});
 		
 		while (true) {
 			try {
-				Thread.sleep(normalTime);
+				Thread.sleep(normalTime * 60000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -53,7 +55,9 @@ public class TheWalls2Timer implements Runnable {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
 					new Runnable() {
 				public void run() {
-					if (plugin.startGame())
+					TheWalls2GameList gameList = plugin.getGameList();
+					if (gameList != null && !TheWalls2World.isRestoring
+							&& plugin.startGame())
 						System.out.println("[TheWalls2] Game started automatically");
 				}
 			});
