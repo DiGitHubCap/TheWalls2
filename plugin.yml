@@ -45,6 +45,8 @@ permissions:
         description: "Gives access to the command '/thewalls team <1-4>'"
     thewalls2.command.thewalls.start:
         description: "Gives access to the command '/thewalls start'"
+    thewalls2.command.thewalls.stop:
+        description: "Gives access to the command '/thewalls stop'"
     thewalls2.command.thewalls.restoreworld:
         description: "Gives access to the command '/thewalls restoreworld'"
 commands:

@@ -173,7 +173,7 @@ public class TheWalls2 extends JavaPlugin {
 					return true;
 				}
 				else if (args[0].equalsIgnoreCase("stop")) {
-					if (sender.hasPermission("thewalls2.command.thewalls.start")) {
+					if (sender.hasPermission("thewalls2.command.thewalls.stop")) {
 						if (gameList == null) {
 							sender.sendMessage(ChatColor.RED + "There is no game currently in progress!");
 							return true;
