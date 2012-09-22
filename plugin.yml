@@ -17,7 +17,7 @@
 
 name: TheWalls2
 main: me.Hoot215.TheWalls2.TheWalls2
-version: 1.2
+version: 1.3
 author: Hoot215
 permissions:
     thewalls2.*:
