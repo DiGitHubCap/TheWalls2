@@ -209,6 +209,12 @@ public class TheWalls2PlayerListener implements Listener {
 							player.sendMessage(ChatColor.AQUA + "[TheWalls2] "
 									+ ChatColor.GREEN
 									+ "An update is available!");
+							player.sendMessage(ChatColor.WHITE
+									+ "http://dev.bukkit.org/server-mods/thewalls2/");
+							player.sendMessage(ChatColor.RED
+									+ "If you can't find a newer version, " +
+									"check in the comments section for a " +
+									"Dropbox link");
 						}
 					}, 60L);
 			}
