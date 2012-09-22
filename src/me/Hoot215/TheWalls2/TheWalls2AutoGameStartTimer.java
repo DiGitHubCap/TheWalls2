@@ -40,7 +40,7 @@ public class TheWalls2AutoGameStartTimer implements Runnable {
 				new Runnable() {
 			public void run() {
 				TheWalls2GameList gameList = plugin.getGameList();
-				if (gameList != null && !TheWalls2World.isRestoring
+				if (gameList == null && !TheWalls2World.isRestoring
 						&& plugin.startGame())
 					System.out.println("[TheWalls2] Game started automatically");
 			}
@@ -57,7 +57,7 @@ public class TheWalls2AutoGameStartTimer implements Runnable {
 					new Runnable() {
 				public void run() {
 					TheWalls2GameList gameList = plugin.getGameList();
-					if (gameList != null && !TheWalls2World.isRestoring
+					if (gameList == null && !TheWalls2World.isRestoring
 							&& plugin.startGame())
 						System.out.println("[TheWalls2] Game started automatically");
 				}
