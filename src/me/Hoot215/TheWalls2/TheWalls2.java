@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.Set;
 
 import me.Hoot215.TheWalls2.metrics.Metrics;
+import me.Hoot215.TheWalls2.util.Teleport;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,6 +45,7 @@ public class TheWalls2 extends JavaPlugin {
 	private TheWalls2LocationData locData;
 	private TheWalls2World wallsWorld;
 	private Listener playerListener;
+	private Listener entityListener;
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("thewalls")) {
@@ -87,7 +90,7 @@ public class TheWalls2 extends JavaPlugin {
 							
 							if (queue.getSize() < 12) {
 								queue.addPlayer(player.getName(), player.getLocation());
-								player.teleport(locData.getLobby());
+								Teleport.teleportPlayerToLocation(player, locData.getLobby());
 								player.sendMessage(ChatColor.GREEN + "Successfully joined the game queue!");
 							}
 							else {
@@ -188,6 +191,7 @@ public class TheWalls2 extends JavaPlugin {
 						queue.reset(true);
 						gameList = null;
 						restoreBackup();
+						return true;
 					}
 					sender.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
 					return true;
@@ -287,21 +291,50 @@ public class TheWalls2 extends JavaPlugin {
 		
 		if (teams.getEmptyTeamCount() > 2)
 			return false;
+		
 		gameList = new TheWalls2GameList(queue.getList());
 		
 		for (int t = 1; t < 5; t++) {
 			teleportTeamToGame(t, world);
 		}
 		
-		final Location loc = new Location(world, -781, 98, -58);
-		loc.getBlock().setType(Material.REDSTONE_TORCH_ON);
+		gameList.notifyAll("The game has been started!");
 		
-		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+		if (getConfig().getBoolean("game.virtual")) {
+			boolean notify = getConfig().getBoolean("game.notify");
+			int notifyInterval = getConfig().getInt("game.notify-interval");
+			int time = getConfig().getInt("game.time");
+			gameList.notifyAll(String.valueOf(time) + " minutes remaining!");
+			getServer().getScheduler().scheduleSyncDelayedTask(this,
+					new Runnable() {
+				public void run() {
+					for (int t = 1; t < 5; t++) {
+						for (int s = 0; s < 3; s++) {
+							Location loc = locData.getSlot(t, s);
+							int x = loc.getBlockX();
+							int y = loc.getBlockY() - 3;
+							int z = loc.getBlockZ();
+							Bukkit.getWorld(TheWalls2.worldName)
+								.getBlockAt(x, y, z)
+								.setType(Material.REDSTONE_TORCH_ON);
+						}
+					}
+				}
+			}, 20L);
+			new Thread(new TheWalls2GameTimer(this, notify, notifyInterval, time)).start();
+		}
+		else {
+			final Location loc = new Location(world, -781, 98, -58);
 			
-			public void run() {
-				loc.getBlock().setType(Material.AIR);
-			}
-		}, 20L);
+			loc.getBlock().setType(Material.REDSTONE_TORCH_ON);
+			
+			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+				
+				public void run() {
+					loc.getBlock().setType(Material.AIR);
+				}
+			}, 20L);
+		}
 		
 		return true;
 	}
@@ -317,7 +350,7 @@ public class TheWalls2 extends JavaPlugin {
 			Player player = getServer().getPlayer(s);
 			if (player == null)
 				continue;
-			player.teleport(locData.getSlot(teamNumber, i));
+			Teleport.teleportPlayerToLocation(player, locData.getSlot(teamNumber, i));
 			i++;
 		}
 	}
@@ -407,11 +440,15 @@ public class TheWalls2 extends JavaPlugin {
 		}
 		playerListener = new TheWalls2PlayerListener(this);
 		getServer().getPluginManager().registerEvents(playerListener, this);
+		if (!getConfig().getBoolean("general.monsters")) {
+			entityListener = new TheWalls2EntityListener();
+			getServer().getPluginManager().registerEvents(entityListener, this);
+		}
 		
 		if (getConfig().getBoolean("timer.enabled")) {
 			long initialTime = getConfig().getLong("timer.initial-time");
 			long normalTime = getConfig().getLong("timer.normal-time");
-			new Thread(new TheWalls2Timer(this, initialTime, normalTime)).start();
+			new Thread(new TheWalls2AutoGameStartTimer(this, initialTime, normalTime)).start();
 		}
 		
 		try {

@@ -43,6 +43,7 @@ public class TheWalls2LocationData {
 	private Set<Cuboid> walls = new HashSet<Cuboid>();
 	private Cuboid worldCube = new Cuboid(new Location(null, -917, 5, -245),
 			new Location(null, -671, 112, -47));
+	private Location virtualWallDrop = new Location(null, -690, 11, -140);
 	
 	public TheWalls2LocationData(World world) {
 		lobby.setWorld(world);
@@ -86,6 +87,7 @@ public class TheWalls2LocationData {
 				new Location(null, -803, 97, -183)));
 		walls.add(new Cuboid(new Location(null, -864, 68, -182),
 				new Location(null, -804, 97, -182)));
+		virtualWallDrop.setWorld(world);
 	}
 	
 	public Location getLobby() {
@@ -156,5 +158,9 @@ public class TheWalls2LocationData {
 	
 	public Cuboid getWorldCube() {
 		return worldCube;
+	}
+	
+	public Location getVirtualWallDrop() {
+		return virtualWallDrop;
 	}
 }

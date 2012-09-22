@@ -17,8 +17,19 @@
 # 
 # general:
 #   world: The Walls 2 world name
+#   monsters: Whether or not to disable monsters
 #   prize: The prize for winning The Walls 2
 #          Format: 'itemID:itemData:itemAmount'
+# game:
+#   virtual: Whether or not the game is simulated virtually instead of using redstone
+#   notify: (Requires virtual to be true)
+#           Whether or not to notify players at certain intervals about the
+#           remaining time until the walls fall
+#   notify-interval: (Requires notify and virtual to be true)
+#                    The time (in minutes) in between notifying players
+#                    about the remaining time
+#   time: (Requires virtual to be true)
+#         The time (in minutes) that it takes for the walls to fall
 # locations:
 #   lobby: Lobby location (empty = default)
 #          Format: x;y;z
@@ -32,7 +43,13 @@
 
 general:
   world: thewalls2
+  monsters: false
   prize: '264:0:1'
+game:
+  virtual: true
+  notify: true
+  notify-interval: 5
+  time: 35
 locations:
   lobby: ''
 timer:

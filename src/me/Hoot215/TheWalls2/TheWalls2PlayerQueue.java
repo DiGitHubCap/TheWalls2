@@ -21,7 +21,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import me.Hoot215.TheWalls2.util.Teleport;
+
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class TheWalls2PlayerQueue {
 	private TheWalls2 plugin;
@@ -40,9 +43,11 @@ public class TheWalls2PlayerQueue {
 	}
 	
 	public void removePlayer(String playerName, boolean teleport) {
-		if (teleport)
-			plugin.getServer().getPlayer(playerName)
-			.teleport(getLastPlayerLocation(playerName));
+		if (teleport) {
+			Player player = plugin.getServer().getPlayer(playerName);
+			Location loc = getLastPlayerLocation(playerName);
+			Teleport.teleportPlayerToLocation(player, loc);
+		}
 		
 		Iterator<String> iter = queue.iterator();
 		while(iter.hasNext()) {
@@ -94,8 +99,9 @@ public class TheWalls2PlayerQueue {
 		
 		for (String s : queue) {
 			String playerName = s.split(":")[0];
-			plugin.getServer().getPlayer(playerName)
-			.teleport(getLastPlayerLocation(playerName));
+			Player player = plugin.getServer().getPlayer(playerName);
+			Location loc = getLastPlayerLocation(playerName);
+			Teleport.teleportPlayerToLocation(player, loc);
 		}
 		queue = new HashSet<String>();
 	}

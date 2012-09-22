@@ -52,6 +52,16 @@ public class TheWalls2World {
 		isRestoring = true;
 		for (Player player : plugin.getServer()
 				.getWorld("thewalls2").getPlayers()) {
+			if (player == null)
+				break;
+			
+			player.kickPlayer("[TheWalls2] You can't be in the world when " +
+					"it unloads! Please re-join in a few seconds.");
+		}
+		for (Player player : plugin.getRespawnQueue().getPlayerList()) {
+			if (player == null)
+				break;
+			
 			player.kickPlayer("[TheWalls2] You can't be in the world when " +
 					"it unloads! Please re-join in a few seconds.");
 		}

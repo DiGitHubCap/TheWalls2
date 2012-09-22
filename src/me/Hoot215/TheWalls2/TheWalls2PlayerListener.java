@@ -138,6 +138,7 @@ public class TheWalls2PlayerListener implements Listener {
 		Player player = event.getEntity();
 		String playerName = player.getName();
 		TheWalls2GameList gameList = plugin.getGameList();
+		TheWalls2PlayerQueue queue = plugin.getQueue();
 		TheWalls2RespawnQueue respawnQueue = plugin.getRespawnQueue();
 		
 		if (gameList == null)
@@ -146,7 +147,7 @@ public class TheWalls2PlayerListener implements Listener {
 		if (gameList.isInGame(playerName)) {
 			plugin.getServer().broadcastMessage(ChatColor.YELLOW + playerName + ChatColor.RED + " has been defeated in a game of The Walls 2!");
 			gameList.removeFromGame(playerName);
-			respawnQueue.addPlayer(playerName, player.getLocation());
+			respawnQueue.addPlayer(playerName, queue.getLastPlayerLocation(playerName));
 			plugin.checkIfGameIsOver();
 			return;
 		}

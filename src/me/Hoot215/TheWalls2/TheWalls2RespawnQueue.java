@@ -21,7 +21,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class TheWalls2RespawnQueue {
 	private TheWalls2 plugin;
@@ -37,7 +39,7 @@ public class TheWalls2RespawnQueue {
 			return false;
 		
 		for (String s : respawnQueue) {
-			if (s.contains(playerName))
+			if (s.split(":")[0].equals(playerName))
 				return true;
 		}
 		return false;
@@ -57,6 +59,19 @@ public class TheWalls2RespawnQueue {
 		}
 		
 		return loc;
+	}
+	
+	public Set<Player> getPlayerList() {
+		Set<Player> playerList = new HashSet<Player>();
+		for (String s : respawnQueue) {
+			String playerName = s.split(":")[0];
+			playerList.add(Bukkit.getPlayer(playerName));
+		}
+		return playerList;
+	}
+	
+	public Set<String> getList() {
+		return respawnQueue;
 	}
 	
 	public void addPlayer(String playerName, Location loc) {

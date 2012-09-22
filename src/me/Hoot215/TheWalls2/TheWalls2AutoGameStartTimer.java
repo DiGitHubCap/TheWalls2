@@ -17,12 +17,13 @@
 
 package me.Hoot215.TheWalls2;
 
-public class TheWalls2Timer implements Runnable {
+public class TheWalls2AutoGameStartTimer implements Runnable {
 	private TheWalls2 plugin;
 	private long initialTime;
 	private long normalTime;
 	
-	public TheWalls2Timer(TheWalls2 instance, long initial, long normal) {
+	public TheWalls2AutoGameStartTimer(TheWalls2 instance,
+			long initial, long normal) {
 		plugin = instance;
 		initialTime = initial;
 		normalTime = normal;
