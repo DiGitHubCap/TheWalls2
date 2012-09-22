@@ -268,7 +268,16 @@ public class TheWalls2 extends JavaPlugin {
 								player.sendMessage(ChatColor.RED + "That team does not exist or is full!");
 								return true;
 							}
-							player.sendMessage(ChatColor.RED + "You are already in a team!");
+							if (!teams.isTeamFull(i)) {
+								teams.removePlayer(player.getName());
+								if (teams.addPlayerToTeam(i, player.getName())) {
+									player.sendMessage(ChatColor.GREEN + "Successfully switched to team " + String.valueOf(i) + "!");
+									return true;
+								}
+								player.sendMessage(ChatColor.RED + "That team does not exist!");
+								return true;
+							}
+							player.sendMessage(ChatColor.RED + "That team does not exist or is full!");
 							return true;
 						}
 						player.sendMessage(ChatColor.RED + "You are not in the queue!");
