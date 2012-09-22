@@ -25,6 +25,7 @@ permissions:
         default: op
         children:
             thewalls2.default: true
+            thewalls2.notify: true
             thewalls2.command.thewalls.start: true
             thewalls2.command.thewalls.stop: true
             thewalls2.command.thewalls.restoreworld: true
@@ -36,6 +37,8 @@ permissions:
             thewalls2.command.thewalls.join: true
             thewalls2.command.thewalls.leave: true
             thewalls2.command.thewalls.team: true
+    thewalls2.notify:
+        description: "Receive notifications of plugin updates"
     thewalls2.command.thewalls:
         description: "Gives access to the command '/thewalls'"
     thewalls2.command.thewalls.join:

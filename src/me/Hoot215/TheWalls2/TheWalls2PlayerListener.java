@@ -17,6 +17,8 @@
 
 package me.Hoot215.TheWalls2;
 
+import me.Hoot215.TheWalls2.util.AutoUpdater;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -28,6 +30,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -186,6 +189,29 @@ public class TheWalls2PlayerListener implements Listener {
 		if (respawnQueue.isInRespawnQueue(playerName)) {
 			event.setRespawnLocation(respawnQueue.getLastPlayerLocation(playerName));
 			respawnQueue.removePlayer(playerName);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		AutoUpdater autoUpdater = plugin.getAutoUpdater();
+		synchronized (autoUpdater.getLock()) {
+			Player player = event.getPlayer();
+			final String playerName = player.getName();
+			if (player.hasPermission("thewalls2.notify")) {
+				if (!AutoUpdater.getIsUpToDate())
+					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+							new Runnable() {
+						public void run() {
+							Player player = plugin.getServer().getPlayer(playerName);
+							if (player == null)
+								return;
+							player.sendMessage(ChatColor.AQUA + "[TheWalls2] "
+									+ ChatColor.GREEN
+									+ "An update is available!");
+						}
+					}, 60L);
+			}
 		}
 	}
 }

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import me.Hoot215.TheWalls2.metrics.Metrics;
+import me.Hoot215.TheWalls2.util.AutoUpdater;
 import me.Hoot215.TheWalls2.util.Teleport;
 
 import org.bukkit.Bukkit;
@@ -38,6 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TheWalls2 extends JavaPlugin {
 	public static String worldName;
+	private AutoUpdater autoUpdater;
 	private TheWalls2PlayerQueue queue;
 	private TheWalls2GameTeams teams;
 	private TheWalls2GameList gameList;
@@ -419,6 +421,10 @@ public class TheWalls2 extends JavaPlugin {
 		return wallsWorld;
 	}
 	
+	public AutoUpdater getAutoUpdater() {
+		return autoUpdater;
+	}
+	
 	@Override
 	public void onDisable() {
 		if (gameList != null) {
@@ -464,6 +470,10 @@ public class TheWalls2 extends JavaPlugin {
 		    Metrics metrics = new Metrics(this);
 		    metrics.start();
 		} catch (IOException e) {}
+		
+		String version = this.getDescription().getVersion();
+		autoUpdater = new AutoUpdater(new Object(), version);
+		new Thread(autoUpdater).start();
 		
 		System.out.println(this + " is now enabled!");
 	}
