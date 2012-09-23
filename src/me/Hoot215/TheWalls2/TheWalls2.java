@@ -398,7 +398,7 @@ public class TheWalls2 extends JavaPlugin {
 	}
 	
 	public void restoreBackup() {
-		TheWalls2World.restoreBackup(this, true);
+		TheWalls2World.reloadWorld(this);
 	}
 	
 	public TheWalls2PlayerQueue getQueue() {
@@ -429,7 +429,7 @@ public class TheWalls2 extends JavaPlugin {
 	public void onDisable() {
 		if (gameList != null) {
 			System.out.println("[TheWalls2] Game interrupted! Restoring world...");
-			TheWalls2World.restoreBackup(this, false);
+			TheWalls2World.reloadWorld(this);
 		}
 		System.out.println("[TheWalls2] Unloading world...");
 		getServer().unloadWorld(worldName, false);
@@ -443,10 +443,10 @@ public class TheWalls2 extends JavaPlugin {
 		worldName = getConfig().getString("general.world");
 		queue = new TheWalls2PlayerQueue(this);
 		teams = new TheWalls2GameTeams(queue);
-		TheWalls2World.createBackup();
 		System.out.println("[TheWalls2] Loading world...");
 		WorldCreator wc = new WorldCreator(worldName);
 		World world = getServer().createWorld(wc);
+		world.setAutoSave(false);
 		locData = new TheWalls2LocationData(world);
 		respawnQueue = new TheWalls2RespawnQueue(this);
 		String lobby = getConfig().getString("locations.lobby");

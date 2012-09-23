@@ -17,12 +17,6 @@
 
 package me.Hoot215.TheWalls2;
 
-import java.io.File;
-import java.io.IOException;
-
-import me.Hoot215.TheWalls2.util.FileUtils;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
@@ -30,28 +24,11 @@ import org.bukkit.entity.Player;
 public class TheWalls2World {
 	public static boolean isRestoring = false;
 	
-	public static void createBackup() {
-		File world = new File(TheWalls2.worldName);
-		File worldBackup = new File(TheWalls2.worldName + "_backup");
-		if (!worldBackup.exists()) {
-			System.out.println("[TheWalls2] World backup is being created...");
-			try {
-				FileUtils.copyFolder(world, worldBackup);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			System.out.println("[TheWalls2] World backup found");
-		}
-	}
-	
-	public static void restoreBackup(TheWalls2 plugin, boolean delay) {
+	public static void reloadWorld(TheWalls2 plugin) {
 		plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
 				+ ChatColor.YELLOW + "World is being unloaded...");
 		isRestoring = true;
-		for (Player player : plugin.getServer()
-				.getWorld("thewalls2").getPlayers()) {
+		for (Player player : plugin.getServer().getWorld("thewalls2").getPlayers()) {
 			if (player == null)
 				break;
 			
@@ -65,47 +42,17 @@ public class TheWalls2World {
 			player.kickPlayer("[TheWalls2] You can't be in the world when " +
 					"it unloads! Please re-join in a few seconds.");
 		}
-		plugin.getServer().unloadWorld(TheWalls2.worldName, false);
 		
-		if (delay) {
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
-					new Runnable() {
-				public void run() {
-					Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
-							+ ChatColor.YELLOW + "World backup is being restored...");
-					File world = new File(TheWalls2.worldName);
-					File worldBackup = new File(TheWalls2.worldName + "_backup");
-					FileUtils.deleteFolder(world);
-					try {
-						FileUtils.copyFolder(worldBackup, world);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
-							+ ChatColor.YELLOW + "World is being loaded...");
-					WorldCreator wc = new WorldCreator(TheWalls2.worldName);
-					Bukkit.getServer().createWorld(wc);
-					isRestoring = false;
-				}
-			}, 20L);
-		}
-		else {
-			plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
-					+ ChatColor.YELLOW + "World backup is being restored...");
-			File world = new File(TheWalls2.worldName);
-			File worldBackup = new File(TheWalls2.worldName + "_backup");
-			FileUtils.deleteFolder(world);
-			try {
-				FileUtils.copyFolder(worldBackup, world);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
+		if (plugin.getServer().unloadWorld(TheWalls2.worldName, false)) {
 			plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
 					+ ChatColor.YELLOW + "World is being loaded...");
 			WorldCreator wc = new WorldCreator(TheWalls2.worldName);
-			plugin.getServer().createWorld(wc);
+			plugin.getServer().createWorld(wc).setAutoSave(false);
+			isRestoring = false;
+		}
+		else {
+			System.out.println("[TheWalls2] An error occurred while unloading " +
+					"the world!");
 			isRestoring = false;
 		}
 	}
