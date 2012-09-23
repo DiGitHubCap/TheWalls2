@@ -19,6 +19,7 @@ name: TheWalls2
 main: me.Hoot215.TheWalls2.TheWalls2
 version: 1.4.1
 author: Hoot215
+softdepend: [Vault]
 website: 'http://dev.bukkit.org/server-mods/thewalls2/'
 permissions:
     thewalls2.*:

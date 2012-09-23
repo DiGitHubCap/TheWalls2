@@ -19,7 +19,13 @@
 #   world: The Walls 2 world name
 #   monsters: Whether or not to disable monsters
 #   prize: The prize for winning The Walls 2
-#          Format: 'itemID:itemData:itemAmount'
+#          Possible values:
+#          - none (no prize)
+#          - item (prize-item)
+#          - money (prize-money, requires Vault)
+#   prize-item: The item prize for winning The Walls 2
+#   prize-money: (Requires Vault)
+#                The money prize for winning The Walls 2
 # game:
 #   virtual: Whether or not the game is simulated virtually instead of using redstone
 #   notify: (Requires virtual to be true)
@@ -44,7 +50,9 @@
 general:
   world: thewalls2
   monsters: false
-  prize: '264:0:1'
+  prize: item
+  prize-item: '264:0:1'
+  prize-money: 300.0
 game:
   virtual: true
   notify: true

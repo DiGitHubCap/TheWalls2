@@ -23,6 +23,7 @@ import java.util.Set;
 import me.Hoot215.TheWalls2.metrics.Metrics;
 import me.Hoot215.TheWalls2.util.AutoUpdater;
 import me.Hoot215.TheWalls2.util.Teleport;
+import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,11 +35,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TheWalls2 extends JavaPlugin {
+	private TheWalls2 plugin = this;
 	public static String worldName;
+	public static Economy economy = null;
 	private AutoUpdater autoUpdater;
 	private TheWalls2PlayerQueue queue;
 	private TheWalls2GameTeams teams;
@@ -379,6 +382,7 @@ public class TheWalls2 extends JavaPlugin {
 			
 			getServer().broadcastMessage(ChatColor.YELLOW + playerName + ChatColor.GREEN + " has won The Walls 2!");
 			player.sendMessage(ChatColor.GOLD + "Congratulations! You have won The Walls 2!");
+			
 			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 				
 				public void run() {
@@ -388,12 +392,7 @@ public class TheWalls2 extends JavaPlugin {
 						queue.removePlayer(playerName, true);
 						futurePlayer.getInventory().setContents(inventories.getInventoryContents(playerName));
 						futurePlayer.getInventory().setArmorContents(inventories.getArmourContents(playerName));
-						String[] prize = getConfig().getString("general.prize").split(":");
-						int prizeID = Integer.parseInt(prize[0]);
-						int prizeAmount = Integer.parseInt(prize[2]);
-						short prizeData = Short.parseShort(prize[1]);
-						ItemStack item = new ItemStack(prizeID, prizeAmount, prizeData);
-						futurePlayer.getWorld().dropItem(futurePlayer.getLocation(), item);
+						TheWalls2Prize.givePrize(plugin, futurePlayer);
 					}
 					
 					teams.reset();
@@ -437,6 +436,16 @@ public class TheWalls2 extends JavaPlugin {
 		return autoUpdater;
 	}
 	
+	private boolean setupEconomy()
+    {
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+
+        return (economy != null);
+    }
+	
 	@Override
 	public void onDisable() {
 		System.out.println("[TheWalls2] Unloading world...");
@@ -462,6 +471,21 @@ public class TheWalls2 extends JavaPlugin {
 		if (TheWalls2ConfigSetter.isLobbyDifferent(this, lobby)) {
 			TheWalls2ConfigSetter.updateLobbyLocation(this, lobby);
 		}
+		String prize = getConfig().getString("general.prize");
+		if (!prize.equals("none") && !prize.equals("money") && !prize.equals("none")) {
+			System.out.println("[TheWalls2] ERROR: general.prize is set to an unknown value!");
+			System.out.println("[TheWalls2] Falling back to item prize!");
+			getConfig().set("general.prize", "item");
+			saveConfig();
+		}
+		else if (getConfig().getString("general.prize").equals("money")) {
+			if (!setupEconomy()) {
+				System.out.println("[TheWalls2] ERROR: Vault was not enabled for some reason!");
+				System.out.println("[TheWalls2] Falling back to item prize!");
+				getConfig().set("general.prize", "item");
+			}
+		}
+		System.out.println("[TheWalls2] Prize mode: " + getConfig().getString("general.prize"));
 		playerListener = new TheWalls2PlayerListener(this);
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		if (!getConfig().getBoolean("general.monsters")) {
