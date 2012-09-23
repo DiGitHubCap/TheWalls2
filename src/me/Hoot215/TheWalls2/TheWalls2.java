@@ -427,10 +427,6 @@ public class TheWalls2 extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		if (gameList != null) {
-			System.out.println("[TheWalls2] Game interrupted! Restoring world...");
-			TheWalls2World.reloadWorld(this);
-		}
 		System.out.println("[TheWalls2] Unloading world...");
 		getServer().unloadWorld(worldName, false);
 		System.out.println(this + " is now disabled!");
