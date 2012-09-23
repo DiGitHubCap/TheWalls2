@@ -22,15 +22,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import me.Hoot215.TheWalls2.TheWalls2;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class AutoUpdater implements Runnable {
+	private TheWalls2 plugin;
 	private Object lock;
 	private static boolean isUpToDate = true;
 	private String currentVersion;
 	
-	public AutoUpdater(Object lock, String currentVersion) {
+	public AutoUpdater(TheWalls2 instance, Object lock, String currentVersion) {
+		plugin = instance;
 		this.lock = lock;
 		this.currentVersion = currentVersion;
 	}
@@ -52,9 +56,13 @@ public class AutoUpdater implements Runnable {
 					synchronized (lock) {
 						isUpToDate = false;
 					}
-					Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN
-							+ "[TheWalls2] An updated version of " +
-							"TheWalls2 is available!");
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+						public void run() {
+							Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN
+									+ "[TheWalls2] An updated version of " +
+									"TheWalls2 is available!");
+						}
+					});
 				}
 				s.close();
 				Thread.sleep(3600000L);

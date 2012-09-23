@@ -481,7 +481,7 @@ public class TheWalls2 extends JavaPlugin {
 		} catch (IOException e) {}
 		
 		String version = this.getDescription().getVersion();
-		autoUpdater = new AutoUpdater(new Object(), version);
+		autoUpdater = new AutoUpdater(this, new Object(), version);
 		new Thread(autoUpdater).start();
 		
 		System.out.println(this + " is now enabled!");
