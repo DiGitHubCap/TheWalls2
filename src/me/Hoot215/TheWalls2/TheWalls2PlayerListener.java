@@ -175,6 +175,8 @@ public class TheWalls2PlayerListener implements Listener {
 			plugin.getServer().broadcastMessage(ChatColor.YELLOW + playerName + ChatColor.RED + " has quit a game of The Walls 2!");
 			gameList.removeFromGame(playerName);
 			queue.removePlayer(playerName, true);
+			player.getInventory().setContents(plugin.getInventory().getInventoryContents(playerName));
+			player.getInventory().setArmorContents(plugin.getInventory().getArmourContents(playerName));
 			plugin.checkIfGameIsOver();
 			return;
 		}
@@ -189,6 +191,8 @@ public class TheWalls2PlayerListener implements Listener {
 		if (respawnQueue.isInRespawnQueue(playerName)) {
 			event.setRespawnLocation(respawnQueue.getLastPlayerLocation(playerName));
 			respawnQueue.removePlayer(playerName);
+			player.getInventory().setContents(plugin.getInventory().getInventoryContents(playerName));
+			player.getInventory().setArmorContents(plugin.getInventory().getArmourContents(playerName));
 		}
 	}
 	

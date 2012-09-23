@@ -46,6 +46,7 @@ public class TheWalls2 extends JavaPlugin {
 	private TheWalls2RespawnQueue respawnQueue;
 	private TheWalls2LocationData locData;
 	private TheWalls2World wallsWorld;
+	private TheWalls2Inventory inventories;
 	private Listener playerListener;
 	private Listener entityListener;
 	
@@ -91,6 +92,8 @@ public class TheWalls2 extends JavaPlugin {
 						if (!queue.isInQueue(player.getName())) {
 							
 							if (queue.getSize() < 12) {
+								inventories.addInventory(player.getName(), player.getInventory());
+								inventories.clearInventory(player);
 								queue.addPlayer(player.getName(), player.getLocation());
 								Teleport.teleportPlayerToLocation(player, locData.getLobby());
 								player.sendMessage(ChatColor.GREEN + "Successfully joined the game queue!");
@@ -122,12 +125,15 @@ public class TheWalls2 extends JavaPlugin {
 							player.sendMessage(ChatColor.RED + "A game is already in progress!");
 							return true;
 						}
+						String playerName = player.getName();
 						
-						if (queue.isInQueue(player.getName())) {
-							queue.removePlayer(player.getName(), true);
-							if (teams.isInTeam(player.getName())) {
-								teams.removePlayer(player.getName());
+						if (queue.isInQueue(playerName)) {
+							queue.removePlayer(playerName, true);
+							if (teams.isInTeam(playerName)) {
+								teams.removePlayer(playerName);
 							}
+							player.getInventory().setContents(inventories.getInventoryContents(playerName));
+							player.getInventory().setArmorContents(inventories.getArmourContents(playerName));
 							player.sendMessage(ChatColor.GREEN + "Successfully left the queue!");
 							return true;
 						}
@@ -380,6 +386,8 @@ public class TheWalls2 extends JavaPlugin {
 					if (futurePlayer != null) {
 						gameList.removeFromGame(playerName);
 						queue.removePlayer(playerName, true);
+						futurePlayer.getInventory().setContents(inventories.getInventoryContents(playerName));
+						futurePlayer.getInventory().setArmorContents(inventories.getArmourContents(playerName));
 						String[] prize = getConfig().getString("general.prize").split(":");
 						int prizeID = Integer.parseInt(prize[0]);
 						int prizeAmount = Integer.parseInt(prize[2]);
@@ -417,6 +425,10 @@ public class TheWalls2 extends JavaPlugin {
 		return locData;
 	}
 	
+	public TheWalls2Inventory getInventory() {
+		return inventories;
+	}
+	
 	public TheWalls2World getWorld() {
 		return wallsWorld;
 	}
@@ -444,6 +456,7 @@ public class TheWalls2 extends JavaPlugin {
 		World world = getServer().createWorld(wc);
 		world.setAutoSave(false);
 		locData = new TheWalls2LocationData(world);
+		inventories = new TheWalls2Inventory();
 		respawnQueue = new TheWalls2RespawnQueue(this);
 		String lobby = getConfig().getString("locations.lobby");
 		if (TheWalls2ConfigSetter.isLobbyDifferent(this, lobby)) {

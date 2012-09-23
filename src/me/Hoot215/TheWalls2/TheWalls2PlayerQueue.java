@@ -102,6 +102,10 @@ public class TheWalls2PlayerQueue {
 			Player player = plugin.getServer().getPlayer(playerName);
 			Location loc = getLastPlayerLocation(playerName);
 			Teleport.teleportPlayerToLocation(player, loc);
+			player.getInventory().setContents(plugin.getInventory()
+					.getInventoryContents(playerName));
+			player.getInventory().setArmorContents(plugin.getInventory()
+					.getArmourContents(playerName));
 		}
 		queue = new HashSet<String>();
 	}
