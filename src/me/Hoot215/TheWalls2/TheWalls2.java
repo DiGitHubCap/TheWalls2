@@ -417,6 +417,10 @@ public class TheWalls2 extends JavaPlugin {
 		return gameList;
 	}
 	
+	public TheWalls2GameTeams getGameTeams() {
+		return teams;
+	}
+	
 	public TheWalls2RespawnQueue getRespawnQueue() {
 		return respawnQueue;
 	}

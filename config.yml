@@ -18,6 +18,7 @@
 # general:
 #   world: The Walls 2 world name
 #   monsters: Whether or not to disable monsters
+#   friendly-fire: Whether or not team killing (or attacking) is allowed
 #   prize: The prize for winning The Walls 2
 #          Possible values:
 #          - none (no prize)
@@ -50,6 +51,7 @@
 general:
   world: thewalls2
   monsters: false
+  friendly-fire: false
   prize: item
   prize-item: '264:0:1'
   prize-money: 300.0

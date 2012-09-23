@@ -61,6 +61,24 @@ public class TheWalls2GameTeams {
 		team4.remove(playerName);
 	}
 	
+	public boolean compareTeams(String player1, String player2) {
+		if (getPlayerTeam(player1) == getPlayerTeam(player2))
+			return true;
+		return false;
+	}
+	
+	public int getPlayerTeam(String playerName) {
+		if (team1.contains(playerName))
+			return 1;
+		if (team2.contains(playerName))
+			return 2;
+		if (team3.contains(playerName))
+			return 3;
+		if (team4.contains(playerName))
+			return 4;
+		return 0;
+	}
+	
 	public boolean isInTeam(String playerName) {
 		if (!team1.contains(playerName)
 				&& !team2.contains(playerName)

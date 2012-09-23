@@ -27,7 +27,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -121,7 +121,7 @@ public class TheWalls2PlayerListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityDamage(EntityDamageEvent event) {
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (!(event.getEntity() instanceof Player))
 			return;
 		
@@ -131,6 +131,21 @@ public class TheWalls2PlayerListener implements Listener {
 			if (plugin.getGameList() == null) {
 				if (plugin.getQueue().isInQueue(player.getName())) {
 					event.setCancelled(true);
+				}
+			}
+			else {
+				if (!(event.getDamager() instanceof Player))
+					return;
+				
+				if (!plugin.getConfig().getBoolean("general.friendly-fire")) {
+					Player attacker = (Player) event.getDamager();
+					TheWalls2GameTeams teams = plugin.getGameTeams();
+					
+					if (teams.compareTeams(player.getName(), attacker.getName())) {
+						event.setCancelled(true);
+					}
+					
+					attacker.sendMessage(ChatColor.RED + "Friendly fire is disabled!");
 				}
 			}
 		}
