@@ -141,11 +141,14 @@ public class TheWalls2PlayerListener implements Listener {
 					Player attacker = (Player) event.getDamager();
 					TheWalls2GameTeams teams = plugin.getGameTeams();
 					
-					if (teams.compareTeams(player.getName(), attacker.getName())) {
-						event.setCancelled(true);
+					if (plugin.getGameList().isInGame(player.getName())
+							&& plugin.getGameList().isInGame(attacker.getName())) {
+						if (teams.compareTeams(player.getName(), attacker.getName())) {
+							event.setCancelled(true);
+						}
+						
+						attacker.sendMessage(ChatColor.RED + "Friendly fire is disabled!");
 					}
-					
-					attacker.sendMessage(ChatColor.RED + "Friendly fire is disabled!");
 				}
 			}
 		}
