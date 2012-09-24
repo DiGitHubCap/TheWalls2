@@ -41,6 +41,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class TheWalls2 extends JavaPlugin {
 	private TheWalls2 plugin = this;
 	public static String worldName;
+	public static String fallbackWorldName;
 	public static Economy economy = null;
 	private AutoUpdater autoUpdater;
 	private TheWalls2PlayerQueue queue;
@@ -463,6 +464,7 @@ public class TheWalls2 extends JavaPlugin {
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 		worldName = getConfig().getString("general.world");
+		fallbackWorldName = getConfig().getString("general.fallback-world");
 		queue = new TheWalls2PlayerQueue(this);
 		teams = new TheWalls2GameTeams(queue);
 		System.out.println("[TheWalls2] Loading world...");

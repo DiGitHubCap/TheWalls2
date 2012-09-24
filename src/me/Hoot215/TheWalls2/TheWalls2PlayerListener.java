@@ -216,9 +216,21 @@ public class TheWalls2PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.getGameList() == null
+				&& player.getWorld().getName().equals(TheWalls2.worldName)) {
+			Location loc = plugin.getServer().getWorld(TheWalls2.fallbackWorldName)
+					.getSpawnLocation();
+			player.teleport(loc);
+			player.sendMessage(ChatColor.AQUA + "[TheWalls2] "
+					+ ChatColor.GREEN + "You have been teleported to " +
+							"a fallback world since you logged into " +
+							"TheWalls2 world while a game wasn't " +
+							"in progress");
+		}
+		
 		AutoUpdater autoUpdater = plugin.getAutoUpdater();
 		synchronized (autoUpdater.getLock()) {
-			Player player = event.getPlayer();
 			final String playerName = player.getName();
 			if (player.hasPermission("thewalls2.notify")) {
 				if (!AutoUpdater.getIsUpToDate())
