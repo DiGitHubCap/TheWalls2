@@ -17,18 +17,21 @@
 
 package me.Hoot215.TheWalls2;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 public class TheWalls2World {
 	public static boolean isRestoring = false;
 	
-	public static void reloadWorld(TheWalls2 plugin) {
+	public static void reloadWorld(final TheWalls2 plugin) {
 		plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
 				+ ChatColor.YELLOW + "World is being unloaded...");
 		isRestoring = true;
-		for (Player player : plugin.getServer().getWorld("thewalls2").getPlayers()) {
+		for (Player player : plugin.getServer().getWorld("thewalls2")
+				.getPlayers()) {
 			if (player == null)
 				break;
 			
@@ -47,13 +50,27 @@ public class TheWalls2World {
 			plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
 					+ ChatColor.YELLOW + "World is being loaded...");
 			WorldCreator wc = new WorldCreator(TheWalls2.worldName);
-			plugin.getServer().createWorld(wc).setAutoSave(false);
+			World world = plugin.getServer().createWorld(wc);
+			world.setAutoSave(false);
+			plugin.getLocationData().setWorld(world);
 			isRestoring = false;
 		}
 		else {
-			System.out.println("[TheWalls2] An error occurred while unloading " +
-					"the world!");
-			isRestoring = false;
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+					new Runnable() {
+				public void run() {
+					if (Bukkit.getServer().unloadWorld(TheWalls2.worldName,
+							false)) {
+						WorldCreator wc = new WorldCreator(TheWalls2.worldName);
+						Bukkit.getServer().createWorld(wc).setAutoSave(false);
+					}
+					else {
+						System.out.println("[TheWalls2] " +
+								"The world failed to unload!");
+					}
+					isRestoring = false;
+				}
+			}, 20L);
 		}
 	}
 }

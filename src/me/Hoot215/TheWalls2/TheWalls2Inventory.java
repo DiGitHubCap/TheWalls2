@@ -41,8 +41,16 @@ public class TheWalls2Inventory {
 		return inventoryMap.get(playerName).getArmourContents();
 	}
 	
+	public boolean hasInventory(String playerName) {
+		return inventoryMap.containsKey(playerName);
+	}
+	
 	public void addInventory(String playerName, PlayerInventory inv) {
 		inventoryMap.put(playerName, new EntireInventory(inv));
+	}
+	
+	public void removeInventory(String playerName) {
+		inventoryMap.remove(playerName);
 	}
 	
 	public void clearInventory(Player player) {

@@ -50,20 +50,24 @@ public class TheWalls2PlayerListener implements Listener {
 			if (gameList == null) {
 				if (plugin.getQueue().isInQueue(player.getName())) {
 					event.setCancelled(true);
-					player.sendMessage(ChatColor.RED + "You can't do that until the game starts!");
+					player.sendMessage(ChatColor.RED
+							+ "You can't do that until the game starts!");
 					return;
 				}
 			}
 			else if (gameList.isInGame(player.getName())) {
-				if (plugin.getLocationData().isPartOfWall(event.getBlock().getLocation())) {
+				if (plugin.getLocationData().isPartOfWall(event.getBlock()
+						.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "Don't break the rules!");
 					return;
 				}
 				for (Location loc : plugin.getLocationData().getSlots()) {
-					if (loc.getBlockX() == event.getBlock().getX() && loc.getBlockZ() == event.getBlock().getZ()) {
+					if (loc.getBlockX() == event.getBlock().getX()
+							&& loc.getBlockZ() == event.getBlock().getZ()) {
 						event.setCancelled(true);
-						player.sendMessage(ChatColor.RED + "Don't break the rules!");
+						player.sendMessage(ChatColor.RED
+								+ "Don't break the rules!");
 						return;
 					}
 				}
@@ -80,12 +84,14 @@ public class TheWalls2PlayerListener implements Listener {
 			if (gameList == null) {
 				if (plugin.getQueue().isInQueue(player.getName())) {
 					event.setCancelled(true);
-					player.sendMessage(ChatColor.RED + "You can't do that until the game starts!");
+					player.sendMessage(ChatColor.RED
+							+ "You can't do that until the game starts!");
 					return;
 				}
 			}
 			else if (gameList.isInGame(player.getName())) {
-				if (plugin.getLocationData().isPartOfWall(event.getBlock().getLocation())) {
+				if (plugin.getLocationData().isPartOfWall(event.getBlock()
+						.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "Don't break the rules!");
 					return;
@@ -96,9 +102,11 @@ public class TheWalls2PlayerListener implements Listener {
 					return;
 				}
 				for (Location loc : plugin.getLocationData().getSlots()) {
-					if (loc.getBlockX() == event.getBlock().getX() && loc.getBlockZ() == event.getBlock().getZ()) {
+					if (loc.getBlockX() == event.getBlock().getX()
+							&& loc.getBlockZ() == event.getBlock().getZ()) {
 						event.setCancelled(true);
-						player.sendMessage(ChatColor.RED + "Don't break the rules!");
+						player.sendMessage(ChatColor.RED
+								+ "Don't break the rules!");
 						return;
 					}
 				}
@@ -114,7 +122,8 @@ public class TheWalls2PlayerListener implements Listener {
 			if (plugin.getGameList() == null) {
 				if (plugin.getQueue().isInQueue(player.getName())) {
 					event.setCancelled(true);
-					player.sendMessage(ChatColor.RED + "You can't do that until the game starts!");
+					player.sendMessage(ChatColor.RED
+							+ "You can't do that until the game starts!");
 				}
 			}
 		}
@@ -143,11 +152,13 @@ public class TheWalls2PlayerListener implements Listener {
 					
 					if (plugin.getGameList().isInGame(player.getName())
 							&& plugin.getGameList().isInGame(attacker.getName())) {
-						if (teams.compareTeams(player.getName(), attacker.getName())) {
+						if (teams.compareTeams(player.getName(),
+								attacker.getName())) {
 							event.setCancelled(true);
 						}
 						
-						attacker.sendMessage(ChatColor.RED + "Friendly fire is disabled!");
+						attacker.sendMessage(ChatColor.RED
+								+ "Friendly fire is disabled!");
 					}
 				}
 			}
@@ -166,9 +177,12 @@ public class TheWalls2PlayerListener implements Listener {
 			return;
 		
 		if (gameList.isInGame(playerName)) {
-			plugin.getServer().broadcastMessage(ChatColor.YELLOW + playerName + ChatColor.RED + " has been defeated in a game of The Walls 2!");
+			plugin.getServer().broadcastMessage(ChatColor.YELLOW + playerName
+					+ ChatColor.RED + " has been defeated in " +
+							"a game of The Walls 2!");
 			gameList.removeFromGame(playerName);
-			respawnQueue.addPlayer(playerName, queue.getLastPlayerLocation(playerName));
+			respawnQueue.addPlayer(playerName,
+					queue.getLastPlayerLocation(playerName));
 			plugin.checkIfGameIsOver();
 			return;
 		}
@@ -177,7 +191,7 @@ public class TheWalls2PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		String playerName = player.getName();
+		final String playerName = player.getName();
 		TheWalls2GameList gameList = plugin.getGameList();
 		TheWalls2PlayerQueue queue = plugin.getQueue();
 		
@@ -190,13 +204,27 @@ public class TheWalls2PlayerListener implements Listener {
 		}
 		
 		if (gameList.isInGame(playerName)) {
-			plugin.getServer().broadcastMessage(ChatColor.YELLOW + playerName + ChatColor.RED + " has quit a game of The Walls 2!");
-			gameList.removeFromGame(playerName);
-			queue.removePlayer(playerName, true);
-			player.getInventory().setContents(plugin.getInventory().getInventoryContents(playerName));
-			player.getInventory().setArmorContents(plugin.getInventory().getArmourContents(playerName));
-			plugin.checkIfGameIsOver();
-			return;
+			int time = plugin.getConfig().getInt("general.disconnect-timer");
+			plugin.getServer().broadcastMessage(ChatColor.YELLOW + playerName
+					+ ChatColor.RED + " has disconnected! " +
+					"They have " + String.valueOf(time)
+					+ " seconds to reconnect before they quit The Walls 2");
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+					new Runnable() {
+				public void run() {
+					TheWalls2GameList futureGameList = plugin.getGameList();
+					if (futureGameList == null)
+						return;
+					
+					if (plugin.getServer().getPlayer(playerName) == null) {
+						futureGameList.removeFromGame(playerName);
+						plugin.getServer().broadcastMessage(ChatColor.YELLOW
+								+ playerName + ChatColor.RED
+								+ " has forfeit The Walls 2");
+						plugin.checkIfGameIsOver();
+					}
+				}
+			}, time * 20);
 		}
 	}
 	
@@ -207,50 +235,70 @@ public class TheWalls2PlayerListener implements Listener {
 		TheWalls2RespawnQueue respawnQueue = plugin.getRespawnQueue();
 		
 		if (respawnQueue.isInRespawnQueue(playerName)) {
-			event.setRespawnLocation(respawnQueue.getLastPlayerLocation(playerName));
+			event.setRespawnLocation(respawnQueue
+					.getLastPlayerLocation(playerName));
 			respawnQueue.removePlayer(playerName);
-			player.getInventory().setContents(plugin.getInventory().getInventoryContents(playerName));
-			player.getInventory().setArmorContents(plugin.getInventory().getArmourContents(playerName));
+			player.getInventory().setContents(plugin.getInventory()
+					.getInventoryContents(playerName));
+			player.getInventory().setArmorContents(plugin.getInventory()
+					.getArmourContents(playerName));
 		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.getGameList() == null
-				&& player.getWorld().getName().equals(TheWalls2.worldName)) {
-			Location loc = plugin.getServer().getWorld(TheWalls2.fallbackWorldName)
-					.getSpawnLocation();
-			player.teleport(loc);
-			player.sendMessage(ChatColor.AQUA + "[TheWalls2] "
-					+ ChatColor.GREEN + "You have been teleported to " +
-							"a fallback world since you logged into " +
-							"TheWalls2 world while a game wasn't " +
-							"in progress");
+		final String playerName = player.getName();
+		TheWalls2GameList gameList = plugin.getGameList();
+		TheWalls2PlayerQueue queue = plugin.getQueue();
+		if (gameList == null) {
+			if (player.getWorld().getName().equals(TheWalls2.worldName)) {
+				if (!queue.isInQueue(playerName)) {
+					Location loc = plugin.getServer()
+							.getWorld(TheWalls2.fallbackWorldName)
+							.getSpawnLocation();
+					player.teleport(loc);
+					player.sendMessage(ChatColor.AQUA + "[TheWalls2] "
+							+ ChatColor.GREEN + "You have been teleported to a "
+							+ "fallback world because you left while a game "
+							+ "was in progress");
+				}
+			}
+		}
+		else {
+			if (!gameList.isInGame(playerName)
+					&& queue.isInQueue(playerName)) {
+				queue.removePlayer(playerName, true);
+				player.getInventory().setContents(plugin.getInventory()
+						.getInventoryContents(playerName));
+				player.getInventory().setArmorContents(plugin.getInventory()
+						.getArmourContents(playerName));
+			}
 		}
 		
 		AutoUpdater autoUpdater = plugin.getAutoUpdater();
 		synchronized (autoUpdater.getLock()) {
-			final String playerName = player.getName();
 			if (player.hasPermission("thewalls2.notify")) {
-				if (!AutoUpdater.getIsUpToDate())
-					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
-							new Runnable() {
+				if (!AutoUpdater.getIsUpToDate()) {
+					plugin.getServer().getScheduler().scheduleSyncDelayedTask(
+							plugin, new Runnable() {
 						public void run() {
-							Player player = plugin.getServer().getPlayer(playerName);
+							Player player = plugin.getServer()
+									.getPlayer(playerName);
 							if (player == null)
 								return;
 							player.sendMessage(ChatColor.AQUA + "[TheWalls2] "
 									+ ChatColor.GREEN
 									+ "An update is available!");
-							player.sendMessage(ChatColor.WHITE
-									+ "http://dev.bukkit.org/server-mods/thewalls2/");
+							player.sendMessage(ChatColor.WHITE +
+									"http://dev.bukkit.org/server-mods/thewalls2/");
 							player.sendMessage(ChatColor.RED
 									+ "If you can't find a newer version, " +
 									"check in the comments section for a " +
 									"Dropbox link");
 						}
 					}, 60L);
+				}
 			}
 		}
 	}

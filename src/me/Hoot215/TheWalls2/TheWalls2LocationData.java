@@ -46,19 +46,7 @@ public class TheWalls2LocationData {
 	private Location virtualWallDrop = new Location(null, -690, 11, -140);
 	
 	public TheWalls2LocationData(World world) {
-		lobby.setWorld(world);
-		team1Slot0.setWorld(world);
-		team1Slot1.setWorld(world);
-		team1Slot2.setWorld(world);
-		team2Slot0.setWorld(world);
-		team2Slot1.setWorld(world);
-		team2Slot2.setWorld(world);
-		team3Slot0.setWorld(world);
-		team3Slot1.setWorld(world);
-		team3Slot2.setWorld(world);
-		team4Slot0.setWorld(world);
-		team4Slot1.setWorld(world);
-		team4Slot2.setWorld(world);
+		setWorld(world);
 		slots.add(team1Slot0);
 		slots.add(team1Slot1);
 		slots.add(team1Slot2);
@@ -87,6 +75,22 @@ public class TheWalls2LocationData {
 				new Location(null, -803, 97, -183)));
 		walls.add(new Cuboid(new Location(null, -864, 68, -182),
 				new Location(null, -804, 97, -182)));
+	}
+	
+	public void setWorld(World world) {
+		lobby.setWorld(world);
+		team1Slot0.setWorld(world);
+		team1Slot1.setWorld(world);
+		team1Slot2.setWorld(world);
+		team2Slot0.setWorld(world);
+		team2Slot1.setWorld(world);
+		team2Slot2.setWorld(world);
+		team3Slot0.setWorld(world);
+		team3Slot1.setWorld(world);
+		team3Slot2.setWorld(world);
+		team4Slot0.setWorld(world);
+		team4Slot1.setWorld(world);
+		team4Slot2.setWorld(world);
 		virtualWallDrop.setWorld(world);
 	}
 	

@@ -19,6 +19,8 @@
 #   world: The Walls 2 world name
 #   fallback-world: The world which players will teleported to if they log
 #                into The Walls 2 world while a game is not in progress
+#   disconnect-timer: The time (in seconds) during which an offline player can log
+#                     back into the server and remain in the game
 #   monsters: Whether or not to disable monsters
 #   friendly-fire: Whether or not team killing (or attacking) is allowed
 #   prize: The prize for winning The Walls 2
@@ -53,6 +55,7 @@
 general:
   world: thewalls2
   fallback-world: world
+  disconnect-timer: 30
   monsters: false
   friendly-fire: false
   prize: item

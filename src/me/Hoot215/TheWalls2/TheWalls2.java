@@ -377,10 +377,15 @@ public class TheWalls2 extends JavaPlugin {
 		}
 	}
 	
-	public void checkIfGameIsOver() {
+	public boolean checkIfGameIsOver() {
 		if (gameList.getPlayerCount() < 2) {
 			final String playerName = gameList.getLastPlayer();
+			if (playerName == null)
+				return false;
+			
 			Player player = getServer().getPlayer(playerName);
+			if (player == null)
+				return false;
 			
 			getServer().broadcastMessage(ChatColor.YELLOW + playerName + ChatColor.GREEN + " has won The Walls 2!");
 			player.sendMessage(ChatColor.GOLD + "Congratulations! You have won The Walls 2!");
@@ -403,7 +408,9 @@ public class TheWalls2 extends JavaPlugin {
 					restoreBackup();
 				}
 			}, 100L);
+			return true;
 		}
+		return false;
 	}
 	
 	public void restoreBackup() {
@@ -479,7 +486,7 @@ public class TheWalls2 extends JavaPlugin {
 			TheWalls2ConfigSetter.updateLobbyLocation(this, lobby);
 		}
 		String prize = getConfig().getString("general.prize");
-		if (!prize.equals("none") && !prize.equals("money") && !prize.equals("none")) {
+		if (!prize.equals("item") && !prize.equals("money") && !prize.equals("none")) {
 			System.out.println("[TheWalls2] ERROR: general.prize is set to an unknown value!");
 			System.out.println("[TheWalls2] Falling back to item prize!");
 			getConfig().set("general.prize", "item");
