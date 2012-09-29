@@ -17,9 +17,11 @@
 
 package me.Hoot215.TheWalls2;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
+import me.Hoot215.TheWalls2.api.AddonLoader;
 import me.Hoot215.TheWalls2.metrics.Metrics;
 import me.Hoot215.TheWalls2.util.AutoUpdater;
 import me.Hoot215.TheWalls2.util.Teleport;
@@ -43,6 +45,7 @@ public class TheWalls2 extends JavaPlugin {
 	public static String worldName;
 	public static String fallbackWorldName;
 	public static Economy economy = null;
+	private AddonLoader addonLoader;
 	private AutoUpdater autoUpdater;
 	private TheWalls2PlayerQueue queue;
 	private TheWalls2GameTeams teams;
@@ -461,6 +464,10 @@ public class TheWalls2 extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		// Add-ons
+		System.out.println("[TheWalls2] Unloading add-ons...");
+		addonLoader.unloadAddons();
+		
 		System.out.println("[TheWalls2] Unloading world...");
 		getServer().unloadWorld(worldName, false);
 		System.out.println(this + " is now disabled!");
@@ -506,6 +513,11 @@ public class TheWalls2 extends JavaPlugin {
 			entityListener = new TheWalls2EntityListener();
 			getServer().getPluginManager().registerEvents(entityListener, this);
 		}
+		
+		// Add-ons
+		System.out.println("[TheWalls2] Loading add-ons...");
+		addonLoader = new AddonLoader();
+		addonLoader.loadAddons(new File("plugins/TheWalls2/addons"));
 		
 		if (getConfig().getBoolean("timer.enabled")) {
 			long initialTime = getConfig().getLong("timer.initial-time");
