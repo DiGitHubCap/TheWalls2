@@ -19,6 +19,8 @@ package me.Hoot215.TheWalls2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import me.Hoot215.TheWalls2.api.AddonLoader;
@@ -381,28 +383,47 @@ public class TheWalls2 extends JavaPlugin {
 	}
 	
 	public boolean checkIfGameIsOver() {
-		if (gameList.getPlayerCount() < 2) {
-			final String playerName = gameList.getLastPlayer();
-			if (playerName == null)
-				return false;
+		if (gameList.getPlayerCount() < 4) {
+			final Set<String> playerNames = gameList.getList();
+			int firstTeam = 0;
+			List<Player> playerList = new ArrayList<Player>();
+			List<String> playerNameList = new ArrayList<String>();
+			for (String s : playerNames) {
+				if (firstTeam == 0) {
+					firstTeam = teams.getPlayerTeam(s);
+					playerList.add(getServer().getPlayer(s));
+					playerNameList.add(s);
+					continue;
+				}
+				if (teams.getPlayerTeam(s) != firstTeam)
+					return false;
+				playerList.add(getServer().getPlayer(s));
+				playerNameList.add(s);
+			}
+			final List<String> finalPlayerList = playerNameList;
 			
-			Player player = getServer().getPlayer(playerName);
-			if (player == null)
-				return false;
-			
-			getServer().broadcastMessage(ChatColor.YELLOW + playerName + ChatColor.GREEN + " has won The Walls 2!");
-			player.sendMessage(ChatColor.GOLD + "Congratulations! You have won The Walls 2!");
+			getServer().broadcastMessage(ChatColor.YELLOW + "Team "
+			+ String.valueOf(firstTeam)
+					+ ChatColor.GREEN + " has won The Walls 2!");
+			for (Player player : playerList) {
+				player.sendMessage(ChatColor.GOLD + "Congratulations! " +
+						"You have won The Walls 2!");
+			}
 			
 			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 				
 				public void run() {
-					Player futurePlayer = getServer().getPlayer(playerName);
-					if (futurePlayer != null) {
-						gameList.removeFromGame(playerName);
-						queue.removePlayer(playerName, true);
-						futurePlayer.getInventory().setContents(inventories.getInventoryContents(playerName));
-						futurePlayer.getInventory().setArmorContents(inventories.getArmourContents(playerName));
-						TheWalls2Prize.givePrize(plugin, futurePlayer);
+					for (String s : finalPlayerList) {
+						Player futurePlayer = getServer().getPlayer(s);
+						if (futurePlayer != null) {
+							gameList.removeFromGame(s);
+							queue.removePlayer(s, true);
+							futurePlayer.getInventory().setContents(inventories
+									.getInventoryContents(s));
+							futurePlayer.getInventory().setArmorContents(inventories
+									.getArmourContents(s));
+							TheWalls2Prize.givePrize(plugin, futurePlayer);
+						}
 					}
 					
 					teams.reset();
