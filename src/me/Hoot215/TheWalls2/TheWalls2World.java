@@ -30,7 +30,7 @@ public class TheWalls2World {
 		plugin.getServer().broadcastMessage(ChatColor.AQUA + "[TheWalls2] "
 				+ ChatColor.YELLOW + "World is being unloaded...");
 		isRestoring = true;
-		for (Player player : plugin.getServer().getWorld("thewalls2")
+		for (Player player : plugin.getServer().getWorld(TheWalls2.worldName)
 				.getPlayers()) {
 			if (player == null)
 				break;
