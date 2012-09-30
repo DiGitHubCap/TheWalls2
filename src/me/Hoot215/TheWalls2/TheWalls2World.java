@@ -70,7 +70,7 @@ public class TheWalls2World {
 					}
 					isRestoring = false;
 				}
-			}, 20L);
+			}, 60L);
 		}
 	}
 }
