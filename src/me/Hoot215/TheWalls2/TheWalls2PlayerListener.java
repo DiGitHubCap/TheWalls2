@@ -18,6 +18,7 @@
 package me.Hoot215.TheWalls2;
 
 import me.Hoot215.TheWalls2.util.AutoUpdater;
+import me.Hoot215.TheWalls2.util.Teleport;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -254,14 +255,23 @@ public class TheWalls2PlayerListener implements Listener {
 		if (gameList == null) {
 			if (player.getWorld().getName().equals(TheWalls2.worldName)) {
 				if (!queue.isInQueue(playerName)) {
-					Location loc = plugin.getServer()
-							.getWorld(TheWalls2.fallbackWorldName)
-							.getSpawnLocation();
-					player.teleport(loc);
-					player.sendMessage(ChatColor.AQUA + "[TheWalls2] "
-							+ ChatColor.GREEN + "You have been teleported to a "
-							+ "fallback world because you left while a game "
-							+ "was in progress");
+					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+							new Runnable() {
+						public void run() {
+							Player futurePlayer = plugin.getServer()
+									.getPlayer(playerName);
+							if (futurePlayer == null)
+								return;
+							Location loc = plugin.getServer()
+									.getWorld(TheWalls2.fallbackWorldName)
+									.getSpawnLocation();
+							Teleport.teleportPlayerToLocation(futurePlayer, loc);
+							futurePlayer.sendMessage(ChatColor.AQUA + "[TheWalls2] "
+									+ ChatColor.GREEN + "You have been teleported "
+									+"to a fallback world because you "
+									+ "left while a game was in progress");
+						}
+					}, 1L);
 				}
 			}
 		}
