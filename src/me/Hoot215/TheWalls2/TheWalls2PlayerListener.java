@@ -66,7 +66,9 @@ public class TheWalls2PlayerListener implements Listener
             else if (gameList.isInGame(player.getName()))
               {
                 if (plugin.getLocationData().isPartOfWall(
-                    event.getBlock().getLocation()))
+                    event.getBlock().getLocation())
+                    || plugin.getLocationData().isPartOfCustomWall(
+                        event.getBlock().getLocation()))
                   {
                     event.setCancelled(true);
                     player
@@ -108,14 +110,6 @@ public class TheWalls2PlayerListener implements Listener
               }
             else if (gameList.isInGame(player.getName()))
               {
-                if (plugin.getLocationData().isPartOfWall(
-                    event.getBlock().getLocation()))
-                  {
-                    event.setCancelled(true);
-                    player
-                        .sendMessage(ChatColor.RED + "Don't break the rules!");
-                    return;
-                  }
                 if (event.getBlock().getY() > 93)
                   {
                     event.setCancelled(true);

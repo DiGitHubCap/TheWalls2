@@ -18,7 +18,9 @@
 
 package me.Hoot215.TheWalls2;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import me.Hoot215.TheWalls2.util.Cuboid;
@@ -46,8 +48,9 @@ public class TheWalls2LocationData
     private Cuboid worldCube = new Cuboid(new Location(null, -917, 5, -245),
         new Location(null, -671, 112, -47));
     private Location virtualWallDrop = new Location(null, -690, 11, -140);
+    private List<Cuboid> customWalls = new ArrayList<Cuboid>();
     
-    public TheWalls2LocationData(World world)
+    public TheWalls2LocationData(TheWalls2 plugin, World world)
       {
         setWorld(world);
         slots.add(team1Slot0);
@@ -78,6 +81,24 @@ public class TheWalls2LocationData
             null, -803, 97, -183)));
         walls.add(new Cuboid(new Location(null, -864, 68, -182), new Location(
             null, -804, 97, -182)));
+        for (Object o : plugin.getConfig().getList("locations.walls"))
+          {
+            String s = (String) o;
+            String[] locs = s.split(";");
+            String[] loc1Array = locs[0].split(",");
+            String[] loc2Array = locs[1].split(",");
+            Location loc1 =
+                new Location(plugin.getServer().getWorld(TheWalls2.worldName),
+                    Integer.valueOf(loc1Array[0]),
+                    Integer.valueOf(loc1Array[1]),
+                    Integer.valueOf(loc1Array[2]));
+            Location loc2 =
+                new Location(plugin.getServer().getWorld(TheWalls2.worldName),
+                    Integer.valueOf(loc2Array[0]),
+                    Integer.valueOf(loc2Array[1]),
+                    Integer.valueOf(loc2Array[2]));
+            customWalls.add(new Cuboid(loc1, loc2));
+          }
       }
     
     public void setWorld (World world)
@@ -96,6 +117,11 @@ public class TheWalls2LocationData
         team4Slot1.setWorld(world);
         team4Slot2.setWorld(world);
         virtualWallDrop.setWorld(world);
+      }
+    
+    public List<Cuboid> getCustomWalls ()
+      {
+        return customWalls;
       }
     
     public Location getLobby ()
@@ -168,6 +194,16 @@ public class TheWalls2LocationData
     public boolean isPartOfWall (Location loc)
       {
         for (Cuboid c : walls)
+          {
+            if (c.isIn(loc))
+              return true;
+          }
+        return false;
+      }
+    
+    public boolean isPartOfCustomWall (Location loc)
+      {
+        for (Cuboid c : customWalls)
           {
             if (c.isIn(loc))
               return true;

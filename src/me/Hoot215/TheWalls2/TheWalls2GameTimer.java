@@ -18,6 +18,10 @@
 
 package me.Hoot215.TheWalls2;
 
+import java.util.List;
+
+import me.Hoot215.TheWalls2.util.Cuboid;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -80,11 +84,46 @@ public class TheWalls2GameTimer implements Runnable
                 public void run ()
                   {
                     plugin.getGameList().notifyAll("The walls are dropping!");
-                    Location virtualWallDrop =
-                        plugin.getLocationData().getVirtualWallDrop();
-                    plugin.getServer().getWorld(TheWalls2.worldName)
-                        .getBlockAt(virtualWallDrop)
-                        .setType(Material.REDSTONE_TORCH_ON);
+                    @SuppressWarnings("unchecked")
+                    List<String> locList =
+                        (List<String>) plugin.getConfig().getList(
+                            "locations.walls");
+                    int iterations = 1;
+                    int wallDelay =
+                        plugin.getConfig().getInt("locations.wall-delay");
+                    for (final String s : locList)
+                      {
+                        int delay = wallDelay * 20 * iterations;
+                        plugin.getServer().getScheduler()
+                            .scheduleSyncDelayedTask(plugin, new Runnable()
+                              {
+                                public void run ()
+                                  {
+                                    String[] locs = s.split(";");
+                                    String[] loc1Array = locs[0].split(",");
+                                    String[] loc2Array = locs[1].split(",");
+                                    Location loc1 =
+                                        new Location(plugin.getServer()
+                                            .getWorld(TheWalls2.worldName),
+                                            Integer.valueOf(loc1Array[0]),
+                                            Integer.valueOf(loc1Array[1]),
+                                            Integer.valueOf(loc1Array[2]));
+                                    Location loc2 =
+                                        new Location(plugin.getServer()
+                                            .getWorld(TheWalls2.worldName),
+                                            Integer.valueOf(loc2Array[0]),
+                                            Integer.valueOf(loc2Array[1]),
+                                            Integer.valueOf(loc2Array[2]));
+                                    Cuboid cube = new Cuboid(loc1, loc2);
+                                    int sleepTime =
+                                        plugin.getConfig().getInt(
+                                            "locations.sleep-interval");
+                                    new Thread(new TheWalls2Walls(plugin, cube,
+                                        sleepTime)).start();
+                                  }
+                              }, delay);
+                        iterations++;
+                      }
                   }
               });
         plugin.getServer().getScheduler()

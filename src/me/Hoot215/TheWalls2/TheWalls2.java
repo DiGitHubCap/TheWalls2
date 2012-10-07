@@ -663,7 +663,7 @@ public class TheWalls2 extends JavaPlugin
         WorldCreator wc = new WorldCreator(worldName);
         World world = getServer().createWorld(wc);
         world.setAutoSave(false);
-        locData = new TheWalls2LocationData(world);
+        locData = new TheWalls2LocationData(this, world);
         inventories = new TheWalls2Inventory();
         respawnQueue = new TheWalls2RespawnQueue(this);
         String lobby = getConfig().getString("locations.lobby");
