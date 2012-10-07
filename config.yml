@@ -45,6 +45,12 @@
 #   lobby: Lobby location (empty = default)
 #          Format: x;y;z
 #          Example: 250.5;65;100.5
+#   walls: Locations of all of the custom walls to drop. Must be in list format.
+#          Format: 'x1,y1,z1;x2,y2,z2'
+#   sleep-interval: The time (in milliseconds) that the thread waits until moving on
+#                   to the next block in the wall. This is inversely proportional
+#                   to the speed the walls drop at.
+#   wall-delay: The time (in seconds) between each wall dropping.
 # timer:
 #   enabled: Whether or not the timer for starting games automatically is enabled
 #   initial-time: The time (in minutes) that it takes after the server is started until
@@ -77,8 +83,8 @@ locations:
   - '-724,68,-182;-784,97,-182'
   - '-724,68,-164;-784,97,-164'
   - '-785,68,-103;-785,97,-163'
-  sleep-interval: 1
-  wall-delay: 1
+  sleep-interval: 4
+  wall-delay: 3
 timer:
   enabled: true
   initial-time: 10
