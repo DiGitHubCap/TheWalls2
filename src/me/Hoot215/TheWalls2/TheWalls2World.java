@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class TheWalls2World
@@ -34,8 +35,8 @@ public class TheWalls2World
             ChatColor.AQUA + "[TheWalls2] " + ChatColor.YELLOW
                 + "World is being unloaded...");
         isRestoring = true;
-        for (Player player : plugin.getServer().getWorld(TheWalls2.worldName)
-            .getPlayers())
+        World world = plugin.getServer().getWorld(TheWalls2.worldName);
+        for (Player player : world.getPlayers())
           {
             if (player == null)
               break;
@@ -52,15 +53,18 @@ public class TheWalls2World
                 + "it unloads! Please re-join in a few seconds.");
           }
         
+        CraftWorld cw = (CraftWorld) world;
+        cw.getHandle().players.clear();
+        
         if (plugin.getServer().unloadWorld(TheWalls2.worldName, false))
           {
             plugin.getServer().broadcastMessage(
                 ChatColor.AQUA + "[TheWalls2] " + ChatColor.YELLOW
                     + "World is being loaded...");
             WorldCreator wc = new WorldCreator(TheWalls2.worldName);
-            World world = plugin.getServer().createWorld(wc);
-            world.setAutoSave(false);
-            plugin.getLocationData().setWorld(world);
+            World newWorld = plugin.getServer().createWorld(wc);
+            newWorld.setAutoSave(false);
+            plugin.getLocationData().setWorld(newWorld);
             isRestoring = false;
           }
         else
