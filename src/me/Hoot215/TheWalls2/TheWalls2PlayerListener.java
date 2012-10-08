@@ -18,6 +18,9 @@
 
 package me.Hoot215.TheWalls2;
 
+import java.util.List;
+import java.util.Random;
+
 import me.Hoot215.TheWalls2.util.AutoUpdater;
 import me.Hoot215.TheWalls2.util.Teleport;
 
@@ -145,7 +148,8 @@ public class TheWalls2PlayerListener implements Listener
         
         if (player.getWorld().getName().equals(TheWalls2.worldName))
           {
-            if (plugin.getGameList() == null)
+            TheWalls2GameList gameList = plugin.getGameList();
+            if (gameList == null)
               {
                 if (plugin.getQueue().isInQueue(player.getName()))
                   {
@@ -153,6 +157,33 @@ public class TheWalls2PlayerListener implements Listener
                     player.sendMessage(ChatColor.RED
                         + "You can't do that until the game starts!");
                   }
+              }
+            else
+              {
+                if (!gameList.isInGame(player.getName()))
+                  return;
+                
+                Player randomPlayer = null;
+                int count = 0;
+                while (true)
+                  {
+                    List<Player> playerList = player.getWorld().getPlayers();
+                    int playerCount = playerList.size();
+                    int randomInt = new Random().nextInt(playerCount);
+                    randomPlayer = playerList.get(randomInt);
+                    if (randomPlayer != player)
+                      break;
+                    if (count >= 20)
+                      {
+                        player.sendMessage(ChatColor.RED + "Either you are "
+                        		+ "extremely unlucky or there is no one else "
+                        		+ "playing with you!");
+                        return;
+                      }
+                    count++;
+                  }
+                player.setCompassTarget(randomPlayer.getLocation());
+                player.sendMessage(ChatColor.GREEN + "Random player located!");
               }
           }
       }
