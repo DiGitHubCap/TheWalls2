@@ -31,7 +31,6 @@ import me.Hoot215.TheWalls2.util.AutoUpdater;
 import me.Hoot215.TheWalls2.util.Teleport;
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -455,26 +454,6 @@ public class TheWalls2 extends JavaPlugin
             int notifyInterval = getConfig().getInt("game.notify-interval");
             int time = getConfig().getInt("game.time");
             gameList.notifyAll(String.valueOf(time) + " minutes remaining!");
-            getServer().getScheduler().scheduleSyncDelayedTask(this,
-                new Runnable()
-                  {
-                    public void run ()
-                      {
-                        for (int t = 1; t < 5; t++)
-                          {
-                            for (int s = 0; s < 3; s++)
-                              {
-                                Location loc = locData.getSlot(t, s);
-                                int x = loc.getBlockX();
-                                int y = loc.getBlockY() - 3;
-                                int z = loc.getBlockZ();
-                                Bukkit.getWorld(TheWalls2.worldName)
-                                    .getBlockAt(x, y, z)
-                                    .setType(Material.REDSTONE_TORCH_ON);
-                              }
-                          }
-                      }
-                  }, 20L);
             new Thread(new TheWalls2GameTimer(this, notify, notifyInterval,
                 time)).start();
           }
@@ -500,20 +479,20 @@ public class TheWalls2 extends JavaPlugin
     
     public void teleportTeamToGame (int teamNumber, World world)
       {
-        int i = 0;
-        Set<String> team = teams.getTeam(teamNumber);
+        String team = "team" + String.valueOf(teamNumber);
+        String[] locArray =
+            this.getConfig().getString("locations.spawns." + team).split(",");
+        Location loc =
+            new Location(world, Integer.valueOf(locArray[0]),
+                Integer.valueOf(locArray[1]), Integer.valueOf(locArray[2]));
+        Set<String> teamPlayers = teams.getTeam(teamNumber);
         
-        if (team.size() == 0)
-          return;
-        
-        for (String s : team)
+        for (String s : teamPlayers)
           {
             Player player = getServer().getPlayer(s);
             if (player == null)
               continue;
-            Teleport.teleportPlayerToLocation(player,
-                locData.getSlot(teamNumber, i));
-            i++;
+            Teleport.teleportPlayerToLocation(player, loc);
           }
       }
     

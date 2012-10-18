@@ -47,6 +47,19 @@
 #          Example: 250.5;65;100.5
 #   walls: Locations of all of the custom walls to drop. Must be in list format.
 #          Format: 'x1,y1,z1;x2,y2,z2'
+#   chunks: Chunk coordinates of the chunks to generate. Must be in list format.
+#           Format: 'x1,z1;x2,z2;x3,z3;x4,z4' (Etc)
+#           NOTE: To find chunk coordinates using an x and y location, divide
+#                 by 16 and floor.
+#   spawns:
+#     team1: Team 1 spawn location
+#            Format: 'x,y,z'
+#     team2: Team 2 spawn location
+#            Format: 'x,y,z'
+#     team3: Team 3 spawn location
+#            Format: 'x,y,z'
+#     team4: Team 4 spawn location
+#            Format: 'x,y,z'
 #   sleep-interval: The time (in milliseconds) that the thread waits until moving on
 #                   to the next block in the wall. This is inversely proportional
 #                   to the speed the walls drop at.
@@ -88,6 +101,11 @@ locations:
   - '0,-2;0,-1;1,-1;1,-2'
   - '-2,-2;-2,-1;-1,-1;-1,-2'
   - '-2,0;-2,1;-1,1;-1,0'
+  spawns:
+    team1: '8,70,8'
+    team2: '-8,70,8'
+    team3: '-8,70,-8'
+    team4: '8,70,-8'
   sleep-interval: 4
   wall-delay: 3
 timer:
