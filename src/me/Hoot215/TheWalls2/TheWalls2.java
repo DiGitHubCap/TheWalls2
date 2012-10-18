@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import me.Hoot215.TheWalls2.api.AddonLoader;
+import me.Hoot215.TheWalls2.chunkGen.BasicChunkGenerator;
 import me.Hoot215.TheWalls2.metrics.Metrics;
 import me.Hoot215.TheWalls2.util.AutoUpdater;
 import me.Hoot215.TheWalls2.util.Teleport;
@@ -35,11 +36,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,6 +50,7 @@ public class TheWalls2 extends JavaPlugin
     public static String worldName;
     public static String fallbackWorldName;
     public static Economy economy = null;
+    public static long timeSeed;
     private AddonLoader addonLoader;
     private AutoUpdater autoUpdater;
     private TheWalls2PlayerQueue queue;
@@ -639,6 +641,13 @@ public class TheWalls2 extends JavaPlugin
       }
     
     @Override
+    public ChunkGenerator getDefaultWorldGenerator (String worldName,
+      String genId)
+      {
+        return new BasicChunkGenerator(this);
+      }
+    
+    @Override
     public void onDisable ()
       {
         // Add-ons
@@ -653,6 +662,7 @@ public class TheWalls2 extends JavaPlugin
     @Override
     public void onEnable ()
       {
+        timeSeed = System.currentTimeMillis();
         getConfig().options().copyDefaults(true);
         saveConfig();
         worldName = getConfig().getString("general.world");
@@ -660,10 +670,8 @@ public class TheWalls2 extends JavaPlugin
         queue = new TheWalls2PlayerQueue(this);
         teams = new TheWalls2GameTeams(queue);
         System.out.println("[TheWalls2] Loading world...");
-        WorldCreator wc = new WorldCreator(worldName);
-        World world = getServer().createWorld(wc);
-        world.setAutoSave(false);
-        locData = new TheWalls2LocationData(this, world);
+        locData = new TheWalls2LocationData(this);
+        TheWalls2World.createWorld(this);
         inventories = new TheWalls2Inventory();
         respawnQueue = new TheWalls2RespawnQueue(this);
         String lobby = getConfig().getString("locations.lobby");

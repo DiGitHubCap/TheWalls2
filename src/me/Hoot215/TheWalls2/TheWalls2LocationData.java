@@ -50,9 +50,8 @@ public class TheWalls2LocationData
     private Location virtualWallDrop = new Location(null, -690, 11, -140);
     private List<Cuboid> customWalls = new ArrayList<Cuboid>();
     
-    public TheWalls2LocationData(TheWalls2 plugin, World world)
+    public TheWalls2LocationData(TheWalls2 plugin)
       {
-        setWorld(world);
         slots.add(team1Slot0);
         slots.add(team1Slot1);
         slots.add(team1Slot2);
