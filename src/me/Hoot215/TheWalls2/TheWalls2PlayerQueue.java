@@ -58,7 +58,7 @@ public class TheWalls2PlayerQueue
           {
             String s = iter.next();
             
-            if (s.contains(playerName))
+            if (s.split(":")[0].equals(playerName))
               {
                 iter.remove();
               }
@@ -88,7 +88,7 @@ public class TheWalls2PlayerQueue
       {
         for (String s : queue)
           {
-            if (s.contains(playerName))
+            if (s.split(":")[0].equals(playerName))
               return true;
           }
         return false;
