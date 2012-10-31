@@ -26,6 +26,7 @@ import me.Hoot215.TheWalls2.util.Teleport;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -160,7 +161,8 @@ public class TheWalls2PlayerListener implements Listener
               }
             else
               {
-                if (!gameList.isInGame(player.getName()))
+                if (player.getItemInHand().getType() != Material.COMPASS
+                    || !gameList.isInGame(player.getName()))
                   return;
                 
                 Player randomPlayer = null;
@@ -176,8 +178,8 @@ public class TheWalls2PlayerListener implements Listener
                     if (count >= 20)
                       {
                         player.sendMessage(ChatColor.RED + "Either you are "
-                        		+ "extremely unlucky or there is no one else "
-                        		+ "playing with you!");
+                            + "extremely unlucky or there is no one else "
+                            + "playing with you!");
                         return;
                       }
                     count++;
