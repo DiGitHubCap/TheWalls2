@@ -25,7 +25,6 @@ import java.util.Scanner;
 
 import me.Hoot215.TheWalls2.TheWalls2;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class AutoUpdater implements Runnable
@@ -35,9 +34,9 @@ public class AutoUpdater implements Runnable
     private static boolean isUpToDate = true;
     private String currentVersion;
     
-    public AutoUpdater(TheWalls2 instance, Object lock, String currentVersion)
+    public AutoUpdater(TheWalls2 plugin, Object lock, String currentVersion)
       {
-        plugin = instance;
+       	this.plugin = plugin;
         this.lock = lock;
         this.currentVersion = currentVersion;
       }
@@ -68,12 +67,12 @@ public class AutoUpdater implements Runnable
                       {
                         isUpToDate = false;
                       }
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
                         new Runnable()
                           {
                             public void run ()
                               {
-                                Bukkit.getConsoleSender().sendMessage(
+                                plugin.getServer().getConsoleSender().sendMessage(
                                     ChatColor.GREEN
                                         + "[TheWalls2] An updated version of "
                                         + "TheWalls2 is available!");
@@ -85,15 +84,15 @@ public class AutoUpdater implements Runnable
               }
             catch (MalformedURLException e)
               {
-                e.printStackTrace();
+                plugin.getLogger().severe("Error with AutoUpdater: " + e.getMessage());
               }
             catch (IOException e)
               {
-                e.printStackTrace();
+            	plugin.getLogger().severe("Error with AutoUpdater: " + e.getMessage());
               }
             catch (InterruptedException e)
               {
-                e.printStackTrace();
+            	plugin.getLogger().severe("Error with AutoUpdater: " + e.getMessage());
               }
           }
       }
