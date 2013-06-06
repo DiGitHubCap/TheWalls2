@@ -18,11 +18,9 @@
 
 package me.Hoot215.TheWalls2;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class TheWalls2World
@@ -53,8 +51,7 @@ public class TheWalls2World
                 + "it unloads! Please re-join in a few seconds.");
           }
         
-        CraftWorld cw = (CraftWorld) world;
-        cw.getHandle().players.clear();
+        world.getPlayers().clear();
         
         if (plugin.getServer().unloadWorld(TheWalls2.worldName, false))
           {
@@ -74,12 +71,12 @@ public class TheWalls2World
                   {
                     public void run ()
                       {
-                        if (Bukkit.getServer().unloadWorld(TheWalls2.worldName,
+                        if (plugin.getServer().unloadWorld(TheWalls2.worldName,
                             false))
                           {
                             WorldCreator wc =
                                 new WorldCreator(TheWalls2.worldName);
-                            Bukkit.getServer().createWorld(wc)
+                            plugin.getServer().createWorld(wc)
                                 .setAutoSave(false);
                           }
                         else
